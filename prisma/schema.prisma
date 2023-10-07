@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+   provider = "prisma-client-js"
+}
+
+datasource db {
+   provider = "mysql"
+   url      = env("DATABASE_URL")
+}
+
+model Categoria {
+   id          Int        @id @default(autoincrement())
+   nombre      String     @unique @db.VarChar(50)
+   descripcion String?    @db.VarChar(256)
+   condicion   Boolean    @default(true)
+   Articulo    Articulo[]
+}
+
+model Articulo {
+   id              Int               @id @default(autoincrement())
+   categoria       Categoria         @relation(fields: [categoriaId], references: [id])
+   categoriaId     Int
+   codigo          String?           @db.VarChar(50)
+   nombre          String            @unique @db.VarChar(100)
+   stock           Int
+   descripcion     String?           @db.VarChar(256)
+   imagen          String?           @db.VarChar(50)
+   condicion       Boolean           @default(true)
+   Detalle_ingreso Detalle_ingreso[]
+   Detalle_venta   Detalle_venta[]
+}
+
+model Persona {
+   id             Int       @id @default(autoincrement())
+   tipo_persona   String    @db.VarChar(20)
+   nombre         String    @db.VarChar(100)
+   tipo_documento String?   @db.VarChar(20)
+   num_documento  String?   @db.VarChar(20)
+   direccion      String?   @db.VarChar(70)
+   telefono       String?   @db.VarChar(20)
+   email          String?   @db.VarChar(50)
+   Ingreso        Ingreso[]
+   Venta          Venta[]
+}
+
+model Usuario {
+   id              Int               @id @default(autoincrement())
+   nombre          String            @db.VarChar(100)
+   tipo_documento  String            @db.VarChar(20)
+   num_documento   String            @db.VarChar(20)
+   direccion       String?           @db.VarChar(70)
+   telefono        String?           @db.VarChar(20)
+   email           String?           @db.VarChar(50)
+   cargo           String?           @db.VarChar(20)
+   login           String            @unique @db.VarChar(20)
+   password        String            @db.VarChar(256)
+   condicion       Boolean           @default(true)
+   Ingreso         Ingreso[]
+   Venta           Venta[]
+   Usuario_permiso Usuario_permiso[]
+}
+
+model Ingreso {
+   id                Int               @id @default(autoincrement())
+   proveedor         Persona           @relation(fields: [proveedorId], references: [id])
+   proveedorId       Int
+   usuario           Usuario           @relation(fields: [usuarioId], references: [id])
+   usuarioId         Int
+   tipo_comprobante  String            @db.VarChar(20)
+   serie_comprobante String?           @db.VarChar(7)
+   num_comprobante   String            @db.VarChar(10)
+   fecha_hora        DateTime          @default(now())
+   impuesto          Decimal           @db.Decimal(4, 2)
+   total_compra      Decimal           @db.Decimal(11, 2)
+   estado            String            @db.VarChar(20)
+   Detalle_ingreso   Detalle_ingreso[]
+}
+
+model Detalle_ingreso {
+   id            Int      @id @default(autoincrement())
+   ingreso       Ingreso  @relation(fields: [ingresoId], references: [id])
+   ingresoId     Int
+   articulo      Articulo @relation(fields: [articuloId], references: [id])
+   articuloId    Int
+   cantidad      Int
+   precio_compra Decimal  @db.Decimal(11, 2)
+   precio_venta  Decimal  @db.Decimal(11, 2)
+}
+
+model Venta {
+   id                Int             @id @default(autoincrement())
+   cliente           Persona         @relation(fields: [clienteId], references: [id])
+   clienteId         Int
+   usuario           Usuario         @relation(fields: [usuarioId], references: [id])
+   usuarioId         Int
+   tipo_comprobante  String          @db.VarChar(20)
+   serie_comprobante String?         @db.VarChar(7)
+   num_comprobante   String          @db.VarChar(10)
+   fecha_hora        DateTime        @default(now())
+   impuesto          Decimal         @db.Decimal(4, 2)
+   total_venta       Decimal         @db.Decimal(11, 2)
+   estado            String          @db.VarChar(20)
+   Detalle_venta     Detalle_venta[]
+}
+
+model Detalle_venta {
+   id           Int      @id @default(autoincrement())
+   venta        Venta    @relation(fields: [ventaId], references: [id])
+   ventaId      Int
+   articulo     Articulo @relation(fields: [articuloId], references: [id])
+   articuloId   Int
+   cantidad     Int
+   precio_venta Decimal  @db.Decimal(11, 2)
+   descuento    Decimal  @db.Decimal(11, 2)
+}
+
+model Permiso {
+   id              Int               @id @default(autoincrement())
+   nombre          String            @db.VarChar(30)
+   Usuario_permiso Usuario_permiso[]
+}
+
+model Usuario_permiso {
+   id        Int     @id @default(autoincrement())
+   usuario   Usuario @relation(fields: [usuarioId], references: [id])
+   usuarioId Int
+   permiso   Permiso @relation(fields: [permisoId], references: [id])
+   permisoId Int
+}
