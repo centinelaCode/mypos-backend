@@ -14,7 +14,9 @@ model Categoria {
    id          Int        @id @default(autoincrement())
    nombre      String     @unique @db.VarChar(50)
    descripcion String?    @db.VarChar(256)
-   condicion   Boolean    @default(true)
+   activo      Boolean    @default(true)
+   createdAt   DateTime   @default(now())
+   updatedAt   DateTime   @updatedAt
    Articulo    Articulo[]
 }
 
@@ -27,7 +29,9 @@ model Articulo {
    stock           Int
    descripcion     String?           @db.VarChar(256)
    imagen          String?           @db.VarChar(50)
-   condicion       Boolean           @default(true)
+   activo          Boolean           @default(true)
+   createdAt       DateTime          @default(now())
+   updatedAt       DateTime          @updatedAt
    Detalle_ingreso Detalle_ingreso[]
    Detalle_venta   Detalle_venta[]
 }
@@ -41,6 +45,8 @@ model Persona {
    direccion      String?   @db.VarChar(70)
    telefono       String?   @db.VarChar(20)
    email          String?   @db.VarChar(50)
+   createdAt      DateTime  @default(now())
+   updatedAt      DateTime  @updatedAt
    Ingreso        Ingreso[]
    Venta          Venta[]
 }
@@ -48,15 +54,15 @@ model Persona {
 model Usuario {
    id              Int               @id @default(autoincrement())
    nombre          String            @db.VarChar(100)
-   tipo_documento  String            @db.VarChar(20)
-   num_documento   String            @db.VarChar(20)
-   direccion       String?           @db.VarChar(70)
-   telefono        String?           @db.VarChar(20)
-   email           String?           @db.VarChar(50)
-   cargo           String?           @db.VarChar(20)
-   login           String            @unique @db.VarChar(20)
+   email           String?           @unique @db.VarChar(50)
    password        String            @db.VarChar(256)
-   condicion       Boolean           @default(true)
+   token           String?           @db.VarChar(256)
+   telefono        String?           @db.VarChar(20)
+   cargo           String?           @db.VarChar(20)
+   confirmado      Boolean           @default(false)
+   activo          Boolean           @default(true)
+   createdAt       DateTime          @default(now())
+   updatedAt       DateTime          @updatedAt
    Ingreso         Ingreso[]
    Venta           Venta[]
    Usuario_permiso Usuario_permiso[]
@@ -75,6 +81,8 @@ model Ingreso {
    impuesto          Decimal           @db.Decimal(4, 2)
    total_compra      Decimal           @db.Decimal(11, 2)
    estado            String            @db.VarChar(20)
+   createdAt         DateTime          @default(now())
+   updatedAt         DateTime          @updatedAt
    Detalle_ingreso   Detalle_ingreso[]
 }
 
@@ -87,6 +95,8 @@ model Detalle_ingreso {
    cantidad      Int
    precio_compra Decimal  @db.Decimal(11, 2)
    precio_venta  Decimal  @db.Decimal(11, 2)
+   createdAt     DateTime @default(now())
+   updatedAt     DateTime @updatedAt
 }
 
 model Venta {
@@ -102,6 +112,8 @@ model Venta {
    impuesto          Decimal         @db.Decimal(4, 2)
    total_venta       Decimal         @db.Decimal(11, 2)
    estado            String          @db.VarChar(20)
+   createdAt         DateTime        @default(now())
+   updatedAt         DateTime        @updatedAt
    Detalle_venta     Detalle_venta[]
 }
 
@@ -114,18 +126,24 @@ model Detalle_venta {
    cantidad     Int
    precio_venta Decimal  @db.Decimal(11, 2)
    descuento    Decimal  @db.Decimal(11, 2)
+   createdAt    DateTime @default(now())
+   updatedAt    DateTime @updatedAt
 }
 
 model Permiso {
    id              Int               @id @default(autoincrement())
    nombre          String            @db.VarChar(30)
+   createdAt       DateTime          @default(now())
+   updatedAt       DateTime          @updatedAt
    Usuario_permiso Usuario_permiso[]
 }
 
 model Usuario_permiso {
-   id        Int     @id @default(autoincrement())
-   usuario   Usuario @relation(fields: [usuarioId], references: [id])
+   id        Int      @id @default(autoincrement())
+   usuario   Usuario  @relation(fields: [usuarioId], references: [id])
    usuarioId Int
-   permiso   Permiso @relation(fields: [permisoId], references: [id])
+   permiso   Permiso  @relation(fields: [permisoId], references: [id])
    permisoId Int
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
 }

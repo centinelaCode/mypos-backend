@@ -3,7 +3,9 @@ CREATE TABLE `Categoria` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(50) NOT NULL,
     `descripcion` VARCHAR(256) NULL,
-    `condicion` BOOLEAN NOT NULL DEFAULT true,
+    `activo` BOOLEAN NOT NULL DEFAULT true,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Categoria_nombre_key`(`nombre`),
     PRIMARY KEY (`id`)
@@ -18,7 +20,9 @@ CREATE TABLE `Articulo` (
     `stock` INTEGER NOT NULL,
     `descripcion` VARCHAR(256) NULL,
     `imagen` VARCHAR(50) NULL,
-    `condicion` BOOLEAN NOT NULL DEFAULT true,
+    `activo` BOOLEAN NOT NULL DEFAULT true,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Articulo_nombre_key`(`nombre`),
     PRIMARY KEY (`id`)
@@ -34,6 +38,8 @@ CREATE TABLE `Persona` (
     `direccion` VARCHAR(70) NULL,
     `telefono` VARCHAR(20) NULL,
     `email` VARCHAR(50) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -42,17 +48,17 @@ CREATE TABLE `Persona` (
 CREATE TABLE `Usuario` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(100) NOT NULL,
-    `tipo_documento` VARCHAR(20) NOT NULL,
-    `num_documento` VARCHAR(20) NOT NULL,
-    `direccion` VARCHAR(70) NULL,
-    `telefono` VARCHAR(20) NULL,
     `email` VARCHAR(50) NULL,
-    `cargo` VARCHAR(20) NULL,
-    `login` VARCHAR(20) NOT NULL,
     `password` VARCHAR(256) NOT NULL,
-    `condicion` BOOLEAN NOT NULL DEFAULT true,
+    `token` VARCHAR(256) NULL,
+    `telefono` VARCHAR(20) NULL,
+    `cargo` VARCHAR(20) NULL,
+    `confirmado` BOOLEAN NOT NULL DEFAULT false,
+    `activo` BOOLEAN NOT NULL DEFAULT true,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `Usuario_login_key`(`login`),
+    UNIQUE INDEX `Usuario_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -68,6 +74,8 @@ CREATE TABLE `Ingreso` (
     `impuesto` DECIMAL(4, 2) NOT NULL,
     `total_compra` DECIMAL(11, 2) NOT NULL,
     `estado` VARCHAR(20) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -80,6 +88,8 @@ CREATE TABLE `Detalle_ingreso` (
     `cantidad` INTEGER NOT NULL,
     `precio_compra` DECIMAL(11, 2) NOT NULL,
     `precio_venta` DECIMAL(11, 2) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -96,6 +106,8 @@ CREATE TABLE `Venta` (
     `impuesto` DECIMAL(4, 2) NOT NULL,
     `total_venta` DECIMAL(11, 2) NOT NULL,
     `estado` VARCHAR(20) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -108,6 +120,8 @@ CREATE TABLE `Detalle_venta` (
     `cantidad` INTEGER NOT NULL,
     `precio_venta` DECIMAL(11, 2) NOT NULL,
     `descuento` DECIMAL(11, 2) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -116,6 +130,8 @@ CREATE TABLE `Detalle_venta` (
 CREATE TABLE `Permiso` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(30) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -125,6 +141,8 @@ CREATE TABLE `Usuario_permiso` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `usuarioId` INTEGER NOT NULL,
     `permisoId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
