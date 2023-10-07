@@ -1,4 +1,7 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcrypt'
+
+import { hashPassword } from '../helpers/hashPassword.js'
 
 const db = new PrismaClient()
 
@@ -21,8 +24,18 @@ const registrar = async (req, res) => {
 
    //? procedemos a crear y guardar el nuevo usuario en la DB
    try {
+      const { nombre, email, password } = req.body;
+
+      //? hasheamos el password
+      const passwordHasheado = await hashPassword(password)
+
+      //? guardamos el nuevo usuario en la db
       const newUser = await db.usuario.create({
-         data: req.body
+         data: {
+            nombre,
+            email,
+            password: passwordHasheado
+         }
       })
       await db.$disconnect()
 
