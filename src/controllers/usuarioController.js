@@ -1,15 +1,29 @@
+import { PrismaClient } from '@prisma/client'
 
-//! ====== GET ALL USERS =========
-const usuarios = (req, res) => {
-   res.json({msg: "Obteniendo los usuarios..."})
-}
+const db = new PrismaClient()
 
-//! ====== POST CREATE USER =========
-const crearUsuario = (req, res) => {
-   res.json({ msg: "Creando usuario..."})
+
+//! ====== REGISTRAR USER =========
+const registrar = async (req, res) => {
+
+   try {
+      const dataUser = req.body
+      const newUser = await db.usuario.create({
+         data: dataUser
+      })
+      await db.$disconnect()
+
+      res.json(newUser)
+   } catch (error) {
+      console.error(e)
+      await db.$disconnect()
+      process.exit(1)
+   }
 }
+//! ====== -------------- =========
+
+
 
 export {
-   usuarios,
-   crearUsuario,
+   registrar
 }

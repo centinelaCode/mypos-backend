@@ -1,14 +1,13 @@
 import { Router } from 'express'
 
 import {
-   usuarios,
-   crearUsuario
+   registrar
 } from '../controllers/usuarioController.js'
 
 const router = Router()
 
-router.get('/', usuarios)
-router.post('/', crearUsuario)
+//! === Autenticación | Registro | Confirmación ===
+router.post('/registrar', registrar)
 
 
 
