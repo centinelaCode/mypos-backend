@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 
 import { hashPassword } from '../helpers/hashPassword.js'
+import generarId from '../helpers/generarId.js'
 
 const db = new PrismaClient()
 
@@ -34,7 +35,8 @@ const registrar = async (req, res) => {
          data: {
             nombre,
             email,
-            password: passwordHasheado
+            password: passwordHasheado,
+            token: generarId()
          }
       })
       await db.$disconnect()
@@ -83,8 +85,16 @@ const getUsers = async (req, res) => {
 //! ====== -------------- =========
 
 
+//! ====== AUTHENTICAR USER =========
+const autenticar = async (req, res) => {
+
+}
+//! ====== -------------- =========
+
+
 
 export {
    registrar,
    getUsers,
+   autenticar,
 }
