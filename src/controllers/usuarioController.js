@@ -50,6 +50,41 @@ const registrar = async (req, res) => {
 
 
 
+//! ====== GET ALL USERS =========
+const getUsers = async (req, res) => {
+
+   //? procedemos a obtener todos los usuarios activos
+   try {
+
+      //? obtenesmo todos los usuarios activos de la DB
+      const users = await db.usuario.findMany({
+         where: {
+            activo: true
+         },
+         select: {
+            id: true,
+            nombre: true,
+            email: true,
+            telefono: true,
+            cargo: true,
+            confirmado: true,
+            activo: true,
+         }
+      })
+      await db.$disconnect()
+
+      res.json(users)
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
+   }
+}
+//! ====== -------------- =========
+
+
+
 export {
-   registrar
+   registrar,
+   getUsers,
 }
