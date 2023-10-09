@@ -85,6 +85,7 @@ const getUsers = async (req, res) => {
 //! ====== -------------- =========
 
 
+
 //! ====== AUTHENTICAR USER =========
 const autenticar = async (req, res) => {
 
@@ -122,7 +123,7 @@ const autenticar = async (req, res) => {
 
 
       } else {
-         // si el password es incorrecto
+         //? El password es incorrecto
          const error = new Error('Password incorrecto')
          return res.status(403).json({ msg: error.message })
       }
