@@ -5,7 +5,12 @@ async function hashPassword(password) {
    return password = await bcrypt.hash(password, salt)
 }
 
+async function comprobarPassword(passwordFormulario, hashPassword) {
+   return await bcrypt.compare(passwordFormulario, hashPassword)
+}
+
 
 export {
    hashPassword,
+   comprobarPassword,
 }
