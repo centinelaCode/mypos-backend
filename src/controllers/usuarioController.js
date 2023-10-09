@@ -87,7 +87,53 @@ const getUsers = async (req, res) => {
 
 //! ====== AUTHENTICAR USER =========
 const autenticar = async (req, res) => {
+   const { email, password } = req.body
 
+   //? Comprobar que el usuario exista
+   const usuario = await db.usuario.findFirst({
+      where: {
+         email
+      }
+   })
+   if(!usuario){
+      const error = new Error('El usuario no se encuentra registrado')
+      return res.status(404).json({ msg: error.message })
+   }
+
+   //? Comprobar que el usuario hay confirmado su cuenta
+   if(!usuario.confirmado){
+      const error = new Error('Tu cuenta no ha sido confirmada.')
+      return res.status(403).json({ msg: error.message })
+   }
+
+   //? comprobar su password
+   const isMatchPassword = await bcrypt.compare(password, usuario.password)
+   if(isMatchPassword){
+      // si el password es correcto
+      res.json({
+         id: usuario.id,
+         nombre: usuario.nombre,
+         email: usuario.email,
+      })
+
+
+   } else {
+      // si el password es incorrecto
+      const error = new Error('Password incorrecto')
+      return res.status(403).json({ msg: error.message })
+   }
+
+
+   //? procedemos a authenicar al usuario (crear un JWT)
+   try {
+
+      await db.$disconnect()
+
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
+   }
 }
 //! ====== -------------- =========
 
