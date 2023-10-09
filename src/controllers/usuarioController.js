@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 
 import { hashPassword, comprobarPassword } from '../helpers/hashPassword.js'
 import generarId from '../helpers/generarId.js'
+import generarJWT from '../helpers/generarJWT.js'
 
 const db = new PrismaClient()
 
@@ -116,6 +117,7 @@ const autenticar = async (req, res) => {
             id: usuario.id,
             nombre: usuario.nombre,
             email: usuario.email,
+            token: generarJWT(usuario.id)
          })
 
 
