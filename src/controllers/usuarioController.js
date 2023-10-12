@@ -103,7 +103,7 @@ const autenticar = async (req, res) => {
          return res.status(404).json({ msg: error.message })
       }
 
-      //? Comprobar que el usuario hay confirmado su cuenta
+      //? Comprobar que el usuario tenga confirmada su cuenta
       if(!usuario.confirmado){
          const error = new Error('Tu cuenta no ha sido confirmada.')
          return res.status(403).json({ msg: error.message })
@@ -139,8 +139,50 @@ const autenticar = async (req, res) => {
 
 
 
+//! ====== CONFIRMAR CUUENTA =========
+const confirmarCuenta = async(req, res) => {
+
+   //? obtnemos el token de la url
+   const { token } = req.params
+
+   const usuarioConfirmar = await db.usuario.findFirst({
+      where: {
+         token
+      }
+   })
+
+   if(!usuarioConfirmar) {
+      const error = new Error('Token Invalido')
+      return res.status(404).json({ msg: error.message })
+   }
+
+   try {
+      //? Se procede a confirmar el usuario
+      await db.usuario.update({
+         where: {
+            id: usuarioConfirmar.id
+         },
+         data: {
+            confirmado: true,
+            token: '',
+         }
+      })
+      await db.$disconnect()
+
+      res.json({ msg: 'Usuario Confirmado Satisfactoriamnete'})
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
+   }
+}
+//! ====== ----------------- =========
+
+
+
 export {
-   registrar,
    getUsers,
+   registrar,
    autenticar,
+   confirmarCuenta
 }
