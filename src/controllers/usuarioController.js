@@ -218,10 +218,33 @@ const olvidePassword = async(req, res) => {
 //! ====== --------------- =========
 
 
+
+//! ====== COMPROBAR TOKEN PARA RECOVERY PASSWORD =========
+const comprobarToken = async(req, res) => {
+   const { token } = req.params
+
+   const tokenValido = await db.usuario.findFirst({
+      where: { token }
+   })
+
+   if(!tokenValido) {
+      const error = new Error('Token Invalido')
+      return res.status(404).json({ msg: error.message })
+   }
+
+   res.json({msg: 'Token Valido y el Usuario Existe'})
+
+
+}
+//! ====== -------------------------------------- =========
+
+
+
 export {
    getUsers,
    registrar,
    autenticar,
    confirmarCuenta,
    olvidePassword,
+   comprobarToken,
 }
