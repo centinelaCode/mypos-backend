@@ -221,20 +221,26 @@ const olvidePassword = async(req, res) => {
 
 //! ====== COMPROBAR TOKEN PARA RECOVERY PASSWORD =========
 const comprobarToken = async(req, res) => {
-   const { token } = req.params
+   try {
+      const { token } = req.params
 
-   const tokenValido = await db.usuario.findFirst({
-      where: { token }
-   })
+      const tokenValido = await db.usuario.findFirst({
+         where: { token }
+      })
 
-   if(!tokenValido) {
-      const error = new Error('Token Invalido')
-      return res.status(404).json({ msg: error.message })
+      if(!tokenValido) {
+         const error = new Error('Token Invalido')
+         return res.status(404).json({ msg: error.message })
+      }
+      await db.$disconnect()
+
+      res.json({msg: 'Token Valido y el Usuario Existe'})
+
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
    }
-
-   res.json({msg: 'Token Valido y el Usuario Existe'})
-
-
 }
 //! ====== -------------------------------------- =========
 
