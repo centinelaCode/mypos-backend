@@ -180,9 +180,50 @@ const confirmarCuenta = async(req, res) => {
 
 
 
+//! ====== OLVIDE PASSWORD =========
+const olvidePassword = async(req, res) => {
+   const { email } = req.body
+
+   //? Comprobar que el usuario exista
+   const usuario = await db.usuario.findFirst({
+      where: {
+         email
+      }
+   })
+
+   if(!usuario){
+      const error = new Error('El usuario no se encuentra registrado')
+      return res.status(404).json({ msg: error.message })
+   }
+
+   try {
+      //? Se procede a generar un nuevo token
+      await db.usuario.update({
+         where: {
+            id: usuario.id
+         },
+         data: {
+            token: generarId()
+         }
+      })
+      await db.$disconnect()
+
+      res.json({ msg: 'Hemos enviado un email con las instrucciones'})
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
+   }
+
+
+}
+//! ====== --------------- =========
+
+
 export {
    getUsers,
    registrar,
    autenticar,
-   confirmarCuenta
+   confirmarCuenta,
+   olvidePassword,
 }
