@@ -245,6 +245,43 @@ const comprobarToken = async(req, res) => {
 //! ====== -------------------------------------- =========
 
 
+//! ====== CREAR NUEVO PASSWORD =========
+const nuevoPassword = async(req, res) => {
+   const { token } = req.params
+   const { password } = req.body
+
+   const usuario = await db.usuario.findFirst({
+      where: { token }
+   })
+
+   if(!usuario) {
+      const error = new Error('Token Invalido')
+      return res.status(404).json({ msg: error.message })
+   }
+
+   try {
+      //? hasheamos el password
+      const passwordHasheado = await hashPassword(password)
+
+      await db.usuario.update({
+         where: {
+            id: usuario.id
+         },
+         data: {
+            password: passwordHasheado,
+            token: '',
+         }
+      })
+      await db.$disconnect()
+
+      res.json({ msg: 'Password Actualizado Satisfactoriamente' })
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
+   }
+}
+//! ====== ------------------- =========
 
 export {
    getUsers,
@@ -253,4 +290,5 @@ export {
    confirmarCuenta,
    olvidePassword,
    comprobarToken,
+   nuevoPassword,
 }
