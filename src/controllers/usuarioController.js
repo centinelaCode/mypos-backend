@@ -214,8 +214,6 @@ const olvidePassword = async(req, res) => {
       await db.$disconnect()
       process.exit(1)
    }
-
-
 }
 //! ====== --------------- =========
 
