@@ -283,6 +283,14 @@ const nuevoPassword = async(req, res) => {
 }
 //! ====== ------------------- =========
 
+
+//! ====== PERFIL DEL USUARIO  =========
+const perfil = async(req, res) => {
+   const { usuario } = req
+   res.json(usuario)
+}
+//! ====== ------------------- =========
+
 export {
    getUsers,
    registrar,
@@ -291,4 +299,5 @@ export {
    olvidePassword,
    comprobarToken,
    nuevoPassword,
+   perfil,
 }

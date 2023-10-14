@@ -8,7 +8,10 @@ import {
    olvidePassword,
    comprobarToken,
    nuevoPassword,
+   perfil,
 } from '../controllers/usuarioController.js'
+import checkAuth from '../middleware/checkAuth.js';
+
 
 const router = Router()
 
@@ -19,13 +22,13 @@ router.post('/registrar', registrar)
 router.post('/login', autenticar)
 router.get('/confirmar/:token', confirmarCuenta)
 
-router.post('/olvide-password', olvidePassword)         // enviamos email
-// router.get('/olvide-password/:token', comprobarToken)   // validar token
-// router.post('/olvide-password/:token', nuevoPassword,)  // para nevo password
+router.post('/olvide-password', olvidePassword)          // enviamos email
 router.route('/olvide-password/:token')
-   .get(comprobarToken)    // validar token
-   .post(nuevoPassword)    // para nevo password
+   .get(comprobarToken)                                  // validar token
+   .post(nuevoPassword)                                  // para nevo password
 
+
+router.get('/perfil', checkAuth, perfil)
 
 
 
