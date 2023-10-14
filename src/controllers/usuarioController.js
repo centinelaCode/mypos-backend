@@ -1,10 +1,7 @@
-import { PrismaClient } from '@prisma/client'
-
+import db from '../config/db.js'
 import { hashPassword, comprobarPassword } from '../helpers/hashPassword.js'
 import generarId from '../helpers/generarId.js'
 import generarJWT from '../helpers/generarJWT.js'
-
-const db = new PrismaClient()
 
 
 //! ====== REGISTRAR USER =========

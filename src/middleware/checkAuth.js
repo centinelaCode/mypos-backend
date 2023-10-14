@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import db from '../config/db.js'
 import jwt from 'jsonwebtoken'
-
-const db = new PrismaClient()
 
 const checkAuth = async(req, res, next) => {
    let token;
@@ -9,13 +7,7 @@ const checkAuth = async(req, res, next) => {
    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       try {
          token = req.headers.authorization.split(' ')[1]
-
          const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-         // if(!decoded.id) {
-         //    const error = new Error('Error, Token Invalido')
-         //    return res.status(404).json({ msg: error.message })
-         // }
 
          //? creamos en el req la variable usuario y con payload(id) obtenemos el usuario
          req.usuario = await db.usuario.findFirst({
