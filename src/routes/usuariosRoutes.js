@@ -15,6 +15,7 @@ import checkAuth from '../middleware/checkAuth.js';
 
 const router = Router()
 
+//* ================= Public =================
 //! === Autenticación | Registro | Confirmación ===
 router.get('/', getUsers)
 
@@ -28,6 +29,9 @@ router.route('/olvide-password/:token')
    .post(nuevoPassword)                                  // para nevo password
 
 
+
+//* ================= Private =================
+//!
 router.get('/perfil', checkAuth, perfil)
 
 
