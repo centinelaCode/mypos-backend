@@ -22,7 +22,7 @@ const checkAuth = async(req, res, next) => {
          })
          await db.$disconnect()
 
-         console.log(req.usuario)
+         // console.log(req.usuario)
 
          return next()
       } catch (error) {
