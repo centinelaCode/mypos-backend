@@ -4,8 +4,26 @@ import db from '../config/db.js'
 //! ====== OBTENER CATEGORIAS =========
 const obtenerCategorias = async(req, res) => {
 
-   res.json({msg: 'Get all Categories'})
+   //? obtenemos todas las categorias
+   try {
+      const categories = await db.categoria.findMany({
+         where: {
+            activo: true
+         },
+         select: {
+            id: true,
+            nombre: true,
+            descripcion: true,
+         }
+      })
+      await db.$disconnect()
 
+      res.json(categories)
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
+   }
 }
 //! ====== ------------------ =========
 
