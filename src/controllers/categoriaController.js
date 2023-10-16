@@ -1,4 +1,5 @@
 import db from '../config/db.js'
+import checkIsStringNumber from '../helpers/checkIsStringNumber.js'
 
 
 //! ====== OBTENER CATEGORIAS =========
@@ -31,9 +32,42 @@ const obtenerCategorias = async(req, res) => {
 
 //! ====== OBTENER CATEGORIA  =========
 const obtenerCategoria = async(req, res) => {
+   const { id } = req.params
 
-   res.json({msg: 'Get one Categorie'})
+   //? obtener categoria
+   try {
 
+      //? validamos que el id sea un string number valido
+      if(!checkIsStringNumber(id)) {
+         const error = new Error('Error inesperado')
+         return res.status(400).json({ msg: error.message })
+      }
+
+      const category = await db.categoria.findFirst({
+         where: {
+            id: Number(id),
+            activo: true
+         },
+         select: {
+            id: true,
+            nombre: true,
+            descripcion: true,
+         }
+      })
+
+      if(!category) {
+         const error = new Error('La Categoria no esta registrada')
+         return res.status(400).json({ msg: error.message })
+      }
+
+      await db.$disconnect()
+
+      res.json(category)
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
+   }
 }
 //! ====== ------------------ =========
 
