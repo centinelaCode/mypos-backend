@@ -218,12 +218,112 @@ const eliminarCategoria = async(req, res) => {
 
 
 
+//! ====== ACTIVAR CATEGORIA =========
+const activarCategoria = async(req, res) => {
+   const { id } = req.params
+
+   //? Activar la categoria
+   try {
+      //? validamos que el id sea un string number valido
+      if(!checkIsStringNumber(id)) {
+         const error = new Error('Error inesperado')
+         return res.status(400).json({ msg: error.message })
+      }
+
+      //? validamos que la categoria a activar exista en la db
+      const category = await db.categoria.findFirst({
+         where: {
+            id: Number(id)
+         },
+         select: {
+            id,
+            activo: true
+         }
+      })
+
+      if(!category) {
+         const error = new Error('La Categoria no esta registrada')
+         return res.status(400).json({ msg: error.message })
+      }
+
+      const categoriaActivada = await db.categoria.update({
+         where: {
+            id: Number(id)
+         },
+         data: {
+            activo: true
+         }
+      })
+      await db.$disconnect()
+
+      res.json(categoriaActivada)
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
+   }
+}
+//! ====== ------------------ =========
+
+
+
+//! ====== DESACTIVAR CATEGORIA =========
+const desactivarCategoria = async(req, res) => {
+   const { id } = req.params
+
+   //? Desactivar la categoria
+   try {
+      //? validamos que el id sea un string number valido
+      if(!checkIsStringNumber(id)) {
+         const error = new Error('Error inesperado')
+         return res.status(400).json({ msg: error.message })
+      }
+
+      //? validamos que la categoria a desactivar exista en la db
+      const category = await db.categoria.findFirst({
+         where: {
+            id: Number(id)
+         },
+         select: {
+            id,
+            activo: true
+         }
+      })
+
+      if(!category) {
+         const error = new Error('La Categoria no esta registrada')
+         return res.status(400).json({ msg: error.message })
+      }
+
+      const categoriaDesactivada = await db.categoria.update({
+         where: {
+            id: Number(id)
+         },
+         data: {
+            activo: false
+         }
+      })
+      await db.$disconnect()
+
+      res.json(categoriaDesactivada)
+   } catch (error) {
+      console.error(error)
+      await db.$disconnect()
+      process.exit(1)
+   }
+}
+//! ====== ------------------ =========
+
+
+
 export {
    obtenerCategorias,
    obtenerCategoria,
    agregarCategoria,
    editarCategoria,
    eliminarCategoria,
+   activarCategoria,
+   desactivarCategoria,
 }
 
 

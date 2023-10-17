@@ -6,6 +6,8 @@ import {
    agregarCategoria,
    editarCategoria,
    eliminarCategoria,
+   activarCategoria,
+   desactivarCategoria,
 } from '../controllers/categoriaController.js'
 import checkAuth from '../middleware/checkAuth.js';
 
@@ -19,6 +21,8 @@ router.route('/:id')
    .get(checkAuth, obtenerCategoria)
    .put(checkAuth, editarCategoria)
    .delete(checkAuth, eliminarCategoria)
+router.put('/activate/:id', activarCategoria)
+router.put('/deactivate/:id', desactivarCategoria)
 
 
 export default router
