@@ -34,6 +34,8 @@ model Articulo {
    activo          Boolean           @default(true)
    createdAt       DateTime          @default(now())
    updatedAt       DateTime          @updatedAt
+   usuario         Usuario           @relation(fields: [usuarioId], references: [id])
+   usuarioId       Int
    Detalle_ingreso Detalle_ingreso[]
    Detalle_venta   Detalle_venta[]
 }
@@ -69,6 +71,7 @@ model Usuario {
    Venta           Venta[]
    Usuario_permiso Usuario_permiso[]
    Categoria       Categoria[]
+   Articulo        Articulo[]
 }
 
 model Ingreso {
