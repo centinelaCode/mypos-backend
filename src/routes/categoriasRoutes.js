@@ -21,8 +21,8 @@ router.route('/:id')
    .get(checkAuth, obtenerCategoria)
    .put(checkAuth, editarCategoria)
    .delete(checkAuth, eliminarCategoria)
-router.put('/activate/:id', activarCategoria)
-router.put('/deactivate/:id', desactivarCategoria)
+router.put('/activar-categoria/:id', activarCategoria)
+router.put('/desactivar-categoria/:id', desactivarCategoria)
 
 
 export default router
